@@ -22,15 +22,15 @@ module.exports = async function (fastify, opts) {
     *
     * The unitofworkResponseHandler function provides custom handling to sync'ly respond to the request.
     */
-    fastify.post('/unitofwork',
+    fastify.post('/generatePDF',
         // async=true to apply standard response 201 response or provide custom response handler function
-        {config: {salesforce: {async: unitOfWorkResponseHandler}}},
+        {config: {salesforce: {async: generatePDFResponseHandler}}},
         async (request, reply) => {
             const { event, context, logger } = request.sdk;
             const org = context.org;
             const dataApi = context.org.dataApi;
             
-            logger.info(`POST /unitofwork ${JSON.stringify(event.data || {})}`);
+            logger.info(`POST /generatePDF ${JSON.stringify(event.data || {})}`);
 
             const validateField = (field, value) => {
                 if (!value) throw new Error(`Please provide ${field}`);
@@ -107,8 +107,6 @@ module.exports = async function (fastify, opts) {
             }
             return reply;
     });
-
-    
 
     fastify.setErrorHandler(function (error, request, reply) {
         request.log.error(error)
